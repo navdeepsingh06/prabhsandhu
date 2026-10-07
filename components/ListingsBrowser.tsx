@@ -1,20 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { SlidersHorizontal, X, SearchX } from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { propertyTypes } from "@/data/listings";
 import { ListingCard, ListingCardSkeleton } from "./ListingCard";
 import { Button } from "./Button";
 import { cn } from "@/lib/utils";
-
-export interface InitialFilters {
-  area?: string;
-  type?: string;
-  maxPrice?: string;
-  minBeds?: string;
-  status?: string;
-}
 
 type SortKey = "newest" | "price-asc" | "price-desc" | "beds-desc";
 
@@ -28,18 +21,19 @@ const sortOptions: { value: SortKey; label: string }[] = [
 export function ListingsBrowser({
   listings,
   areas,
-  initial,
 }: {
   listings: Listing[];
   areas: string[];
-  initial: InitialFilters;
 }) {
+  // Initial filters come from the URL (?area=…&maxPrice=…&minBeds=…&type=…),
+  // set by the hero SearchBar. Read on the client so the page stays static.
+  const params = useSearchParams();
   const [loading, setLoading] = useState(true);
-  const [area, setArea] = useState(initial.area ?? "");
-  const [type, setType] = useState(initial.type ?? "");
-  const [maxPrice, setMaxPrice] = useState(initial.maxPrice ?? "");
-  const [minBeds, setMinBeds] = useState(initial.minBeds ?? "");
-  const [status, setStatus] = useState(initial.status ?? "");
+  const [area, setArea] = useState(() => params.get("area") ?? "");
+  const [type, setType] = useState(() => params.get("type") ?? "");
+  const [maxPrice, setMaxPrice] = useState(() => params.get("maxPrice") ?? "");
+  const [minBeds, setMinBeds] = useState(() => params.get("minBeds") ?? "");
+  const [status, setStatus] = useState(() => params.get("status") ?? "");
   const [sort, setSort] = useState<SortKey>("newest");
   const [showFilters, setShowFilters] = useState(false);
 

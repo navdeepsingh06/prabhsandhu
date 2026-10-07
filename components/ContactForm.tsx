@@ -3,9 +3,29 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { Loader2, CheckCircle2, AlertCircle, Send } from "lucide-react";
+import { CheckCircle2, AlertCircle, Send } from "lucide-react";
 import { contactSchema, type ContactInput } from "@/lib/validation";
+import { site } from "@/data/site";
 import { cn } from "@/lib/utils";
+
+/** Build a pre-filled mailto: link from the submitted values. */
+function buildMailto(values: ContactInput): string {
+  const subject = `New ${values.formType} inquiry — ${values.name}`;
+  const body = [
+    `Name: ${values.name}`,
+    `Email: ${values.email}`,
+    values.phone ? `Phone: ${values.phone}` : null,
+    values.listing ? `Listing: ${values.listing}` : null,
+    values.address ? `Property address: ${values.address}` : null,
+    values.preferredDate ? `Preferred date/time: ${values.preferredDate}` : null,
+    "",
+    "Message:",
+    values.message,
+  ]
+    .filter((l) => l !== null)
+    .join("\n");
+  return `${site.contact.emailHref}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 
 export type FormType = "contact" | "showing" | "valuation" | "consultation";
 
@@ -42,7 +62,7 @@ export function ContactForm({
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
@@ -53,15 +73,17 @@ export function ContactForm({
     },
   });
 
-  async function onSubmit(values: ContactInput) {
+  // Static site (GitHub Pages): no server. Open the visitor's email client
+  // pre-filled so the message goes straight to the agent's inbox.
+  function onSubmit(values: ContactInput) {
     setStatus("idle");
+    // Honeypot: silently "succeed" without doing anything.
+    if (values.company) {
+      setStatus("success");
+      return;
+    }
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      if (!res.ok) throw new Error("Request failed");
+      window.location.href = buildMailto(values);
       setStatus("success");
       reset();
     } catch {
@@ -89,17 +111,24 @@ export function ContactForm({
         role="status"
       >
         <CheckCircle2 className="h-12 w-12 text-green-600" aria-hidden />
-        <h3 className="mt-4 font-serif text-xl font-semibold">Thank you — message received!</h3>
+        <h3 className="mt-4 font-serif text-xl font-semibold">Your email is ready to send</h3>
         <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-          I&apos;ll get back to you personally, usually within one business day. For anything
-          urgent, feel free to call me directly.
+          Your email app should have opened with your message filled in — just press send and I&apos;ll
+          follow up personally, usually within one business day.
+        </p>
+        <p className="mt-3 max-w-sm text-sm text-muted-foreground">
+          Didn&apos;t open? Email me directly at{" "}
+          <a href={site.contact.emailHref} className="font-medium text-accent-strong underline underline-offset-4">
+            {site.contact.email}
+          </a>{" "}
+          or call {site.contact.mobile}.
         </p>
         <button
           type="button"
           onClick={() => setStatus("idle")}
           className="mt-5 text-sm font-medium text-accent-strong underline underline-offset-4"
         >
-          Send another message
+          Compose another message
         </button>
       </div>
     );
@@ -229,24 +258,15 @@ export function ContactForm({
       {status === "error" && (
         <p className="flex items-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
           <AlertCircle className="h-4 w-4 shrink-0" aria-hidden />
-          Something went wrong sending your message. Please try again, or call me directly.
+          Couldn&apos;t open your email app. Please email me directly at {site.contact.email}.
         </p>
       )}
 
       <button
         type="submit"
-        disabled={isSubmitting}
         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground shadow-soft transition hover:bg-accent-strong hover:shadow-lift disabled:opacity-60 sm:w-auto"
       >
-        {isSubmitting ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Sending…
-          </>
-        ) : (
-          <>
-            <Send className="h-4 w-4" aria-hidden /> {submitLabel}
-          </>
-        )}
+        <Send className="h-4 w-4" aria-hidden /> {submitLabel}
       </button>
     </form>
   );

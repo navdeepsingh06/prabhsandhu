@@ -3,37 +3,30 @@
 import { useState } from "react";
 import { Send, Check } from "lucide-react";
 import { z } from "zod";
+import { site } from "@/data/site";
 
 const emailSchema = z.string().email();
 
-/** Lightweight newsletter signup. Posts to /api/contact as a "newsletter" lead. */
+/**
+ * Lightweight newsletter signup. On the static (GitHub Pages) build there is no
+ * server, so this opens the visitor's email client pre-addressed to the agent.
+ */
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
-  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [state, setState] = useState<"idle" | "done" | "error">("idle");
 
-  async function onSubmit(e: React.FormEvent) {
+  function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!emailSchema.safeParse(email).success) {
       setState("error");
       return;
     }
-    setState("loading");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "contact",
-          name: "Newsletter subscriber",
-          email,
-          message: "Newsletter signup from website footer.",
-          consent: true,
-        }),
-      });
-      setState(res.ok ? "done" : "error");
-    } catch {
-      setState("error");
-    }
+    const subject = "Newsletter signup";
+    const body = `Please add me to your Winnipeg market updates.\n\nEmail: ${email}`;
+    window.location.href = `${site.contact.emailHref}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+    setState("done");
   }
 
   if (state === "done") {
@@ -65,7 +58,6 @@ export function NewsletterForm() {
       />
       <button
         type="submit"
-        disabled={state === "loading"}
         className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2.5 text-sm font-medium text-accent-foreground transition hover:bg-accent-strong disabled:opacity-60"
       >
         <Send className="h-4 w-4" aria-hidden />

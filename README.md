@@ -95,16 +95,22 @@ updates. No other changes needed.
 
 ## Forms & email
 
-Forms use **react-hook-form + zod** and POST to `app/api/contact/route.ts`.
-Out of the box, submissions are **validated and logged to the server console**
-so everything works in development.
+This build is a **static export** (for GitHub Pages), so there's no server. All
+forms (contact, showing request, home valuation, newsletter) are
+**react-hook-form + zod** validated, then open the visitor's email client
+pre-filled to the address in `data/site.ts` (`contact.email`). No backend or
+third-party account is required.
 
-To deliver leads by email with [Resend](https://resend.com):
+**Want automatic lead capture instead?** Two options:
 
-1. `npm i resend`
-2. Copy `.env.example` → `.env.local` and set `RESEND_API_KEY`,
-   `LEAD_INBOX_EMAIL`, `LEAD_FROM_EMAIL` (verify your sending domain in Resend).
-3. Uncomment the Resend block in `app/api/contact/route.ts`.
+- **Hosted form service (no server):** sign up for a free service like
+  [Formspree](https://formspree.io), [Web3Forms](https://web3forms.com), or
+  [Getform], then change `buildMailto()` / the submit handlers in
+  `components/ContactForm.tsx` and `components/NewsletterForm.tsx` to `fetch()`
+  POST to your endpoint. Works on GitHub Pages.
+- **Real server API (needs a host like Vercel):** see "Deploying to Vercel"
+  below to restore the server-side `app/api/contact` handler with
+  [Resend](https://resend.com) email delivery.
 
 ---
 
@@ -142,12 +148,41 @@ Open Graph tags use your real domain.
 
 ---
 
-## Deploying to Vercel
+## Deploying to GitHub Pages (default)
 
-1. Push this repo to GitHub/GitLab/Bitbucket.
-2. Import it at [vercel.com/new](https://vercel.com/new) — no config needed.
-3. Add environment variables from `.env.example` (at minimum
-   `NEXT_PUBLIC_SITE_URL`; add the Resend/DDF keys when ready).
+This repo ships a workflow at `.github/workflows/deploy.yml` that builds a static
+export and publishes it to GitHub Pages on every push to `main`.
+
+**One-time setup:** in the repo on GitHub → **Settings → Pages →
+Build and deployment → Source = "GitHub Actions"**. That's it — push to `main`
+and the site goes live at `https://<user>.github.io/<repo>/`.
+
+How it works:
+- `next.config.mjs` uses `output: "export"`; the CI sets `GITHUB_PAGES=true` so
+  the app serves correctly from the `/<repo>` subpath (`basePath`).
+- Images are served `unoptimized` (no image server on Pages).
+- `NEXT_PUBLIC_SITE_URL` is set in the workflow for canonical URLs / sitemap /
+  Open Graph — update it if you rename the repo or add a custom domain.
+
+**Custom domain:** add your domain under Settings → Pages, create a `CNAME`
+file in `public/`, and in `next.config.mjs` drop the `basePath`/`assetPrefix`
+(set `isPages` handling to no subpath) since custom domains serve from the root.
+
+To build the static site locally:
+
+```bash
+GITHUB_PAGES=true npm run build   # outputs to ./out
+```
+
+## Deploying to Vercel (alternative — enables server features)
+
+Prefer a server (working contact API, image optimization, dynamic routes)?
+
+1. In `next.config.mjs`, remove `output: "export"` (and the `basePath` block).
+2. Restore a server form handler (re-add `app/api/contact/route.ts` with Resend)
+   and point the form submit handlers back at it.
+3. Import the repo at [vercel.com/new](https://vercel.com/new) — no config
+   needed. Set `NEXT_PUBLIC_SITE_URL` (and Resend/DDF keys when ready).
 4. Deploy. Vercel detects Next.js automatically.
 
 ---

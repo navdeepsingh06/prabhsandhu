@@ -4,6 +4,9 @@ import { listings } from "@/data/listings";
 import { guideSlugs } from "@/data/neighborhoods";
 import { posts } from "@/data/blog";
 
+// Required for `output: export` (static generation at build time).
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 

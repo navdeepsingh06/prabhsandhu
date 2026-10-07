@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getListings } from "@/lib/listings-source";
 import { listingAreas } from "@/data/listings";
-import { ListingsBrowser, type InitialFilters } from "@/components/ListingsBrowser";
+import { ListingsBrowser } from "@/components/ListingsBrowser";
 import { PageHeader } from "@/components/PageHeader";
 import { Disclaimer } from "@/components/Disclaimer";
 import { pageMetadata } from "@/lib/seo";
@@ -13,22 +14,9 @@ export const metadata: Metadata = pageMetadata({
   path: "/listings",
 });
 
-export default async function ListingsPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const sp = await searchParams;
-  const pick = (k: string) => (Array.isArray(sp[k]) ? sp[k]?.[0] : sp[k]) as string | undefined;
-
-  const initial: InitialFilters = {
-    area: pick("area"),
-    type: pick("type"),
-    maxPrice: pick("maxPrice"),
-    minBeds: pick("minBeds"),
-    status: pick("status"),
-  };
-
+export default async function ListingsPage() {
+  // Filters from the URL (?area=…&maxPrice=…) are read client-side in
+  // ListingsBrowser so this page can be fully static-exported.
   const listings = await getListings();
 
   return (
@@ -43,7 +31,9 @@ export default async function ListingsPage({
         <div className="mb-8">
           <Disclaimer />
         </div>
-        <ListingsBrowser listings={listings} areas={listingAreas} initial={initial} />
+        <Suspense fallback={null}>
+          <ListingsBrowser listings={listings} areas={listingAreas} />
+        </Suspense>
 
         <div className="mt-16 rounded-2xl border border-accent/30 bg-accent/5 p-6 lg:p-8">
           <h2 className="font-serif text-xl font-semibold">Looking for live MLS® listings?</h2>

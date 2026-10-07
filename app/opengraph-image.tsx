@@ -6,6 +6,8 @@ import { site } from "@/data/site";
 export const alt = site.seo.siteName;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+// Required for `output: export` (generate the image at build time).
+export const dynamic = "force-static";
 
 // NOTE: Satori (next/og) requires every element with multiple children to use
 // flex, and only renders fonts it has glyphs for — so text is kept to single
