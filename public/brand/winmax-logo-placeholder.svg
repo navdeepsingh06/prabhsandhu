@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Brokerage logo placeholder">
+  <rect x="6" y="6" width="108" height="108" rx="24" fill="#0e2a2b"/>
+  <path d="M34 82V44l26 20 26-20v38" fill="none" stroke="#b87333" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="60" cy="40" r="5" fill="#b87333"/>
+</svg>

@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================================
+   BRAND TOKENS
+   -------------------------------------------------------------------------
+   All colors are HSL channels (no hsl() wrapper) so Tailwind can apply the
+   <alpha-value> opacity channel. To re-brand to WinMax colors, change only
+   the values below — the whole UI follows.
+
+   Palette: midnight teal primary + warm copper accent on soft warm-white.
+   ========================================================================= */
+:root {
+  --color-primary: 182 51% 11%; /* #0E2A2B midnight teal */
+  --color-primary-light: 182 34% 22%;
+  --color-primary-dark: 183 55% 8%;
+  --color-primary-foreground: 40 38% 96%;
+
+  --color-accent: 29 57% 46%; /* #B87333 copper */
+  --color-accent-strong: 29 62% 34%; /* darker copper for AA small text on light */
+  --color-accent-foreground: 40 38% 97%;
+
+  --color-cream: 40 38% 96%; /* #FAF7F1 */
+  --color-sand: 38 30% 92%;
+  --color-ink: 0 0% 10%; /* #1A1A1A */
+
+  /* Semantic */
+  --color-background: 40 38% 96%;
+  --color-foreground: 0 0% 12%;
+  --color-card: 0 0% 100%;
+  --color-muted: 38 24% 90%;
+  --color-muted-foreground: 185 10% 36%;
+  --color-border: 38 22% 85%;
+
+  color-scheme: light;
+}
+
+/* Dark-mode-aware tokens. The site is designed light-first; these keep it
+   legible for visitors whose OS prefers dark. Remove this block for light-only. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: 184 42% 6%;
+    --color-foreground: 40 30% 94%;
+    --color-card: 185 30% 10%;
+    --color-muted: 185 24% 14%;
+    --color-muted-foreground: 185 12% 68%;
+    --color-border: 185 20% 18%;
+    --color-accent-strong: 29 65% 58%; /* lift copper for contrast on dark */
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif font-semibold tracking-tight text-foreground;
+    text-wrap: balance;
+  }
+
+  /* Visible, consistent focus ring for keyboard users */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    @apply outline-none ring-2 ring-accent-strong ring-offset-2 ring-offset-background rounded-sm;
+  }
+
+  ::selection {
+    @apply bg-accent/25;
+  }
+}
+
+@layer components {
+  .container-px {
+    @apply mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Pill / badge */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent-strong;
+  }
+
+  /* Subtle card used across listings, neighborhoods, posts */
+  .surface-card {
+    @apply rounded-2xl border border-border bg-card shadow-card transition-shadow duration-300;
+  }
+
+  /* Prose defaults for MDX/legal pages */
+  .prose-brand {
+    @apply max-w-prose text-base leading-relaxed text-foreground/85;
+  }
+  .prose-brand h2 {
+    @apply mt-10 mb-3 text-2xl;
+  }
+  .prose-brand h3 {
+    @apply mt-8 mb-2 text-xl;
+  }
+  .prose-brand p {
+    @apply mb-4;
+  }
+  .prose-brand ul {
+    @apply mb-4 list-disc space-y-1 pl-5 marker:text-accent-strong;
+  }
+  .prose-brand ol {
+    @apply mb-4 list-decimal space-y-1 pl-5;
+  }
+  .prose-brand a {
+    @apply font-medium text-accent-strong underline underline-offset-4;
+  }
+  .prose-brand blockquote {
+    @apply my-6 border-l-4 border-accent pl-4 italic text-muted-foreground;
+  }
+}
+
+/* Skeleton shimmer for loading states */
+.skeleton {
+  @apply relative overflow-hidden bg-muted;
+}
+.skeleton::after {
+  content: "";
+  @apply absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/40 to-transparent;
+}
+
+/* Respect reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

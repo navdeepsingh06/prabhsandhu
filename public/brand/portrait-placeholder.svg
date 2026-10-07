@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Portrait placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#15423f"/>
+      <stop offset="1" stop-color="#0e2a2b"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <g fill="#b87333" opacity="0.92">
+    <circle cx="400" cy="400" r="150"/>
+    <path d="M160 900c0-140 108-240 240-240s240 100 240 240z"/>
+  </g>
+  <text x="400" y="960" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#faf7f1" opacity="0.8">Portrait placeholder — add real headshot</text>
+</svg>
