@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { site } from "@/data/site";
+import { asset } from "@/lib/utils";
 import { getFeaturedListings } from "@/lib/listings-source";
 import { neighborhoodCards } from "@/data/neighborhoods";
 import { Hero } from "@/components/Hero";
@@ -67,7 +68,7 @@ export default async function HomePage() {
           <ScrollReveal from="right">
             <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl bg-muted shadow-soft">
               <Image
-                src={site.agent.portrait}
+                src={asset(site.agent.portrait)}
                 alt={site.agent.portraitAlt}
                 fill
                 sizes="(min-width: 1024px) 40vw, 90vw"

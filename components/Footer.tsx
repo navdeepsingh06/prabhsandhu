@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { site } from "@/data/site";
+import { asset } from "@/lib/utils";
 import { NewsletterForm } from "./NewsletterForm";
 import { SocialLinks } from "./SocialLinks";
 
@@ -16,7 +17,7 @@ export function Footer() {
           <div className="lg:col-span-4">
             <Link href="/" className="flex items-center gap-3">
               <Image
-                src={site.brokerage.logo}
+                src={asset(site.brokerage.logo)}
                 alt=""
                 width={44}
                 height={44}

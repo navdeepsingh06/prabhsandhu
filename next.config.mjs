@@ -16,6 +16,9 @@ const nextConfig = {
   images: { unoptimized: true },
   // Serve correctly from https://<user>.github.io/<repo>.
   ...(isPages ? { basePath: `/${repo}`, assetPrefix: `/${repo}/` } : {}),
+  // Exposed to the client so the `asset()` helper can prefix local image paths
+  // (next/image does NOT add basePath to unoptimized string srcs).
+  env: { NEXT_PUBLIC_BASE_PATH: isPages ? `/${repo}` : "" },
   // Allow .mdx files to be treated as pages/content imports.
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
 };

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Award, Users, Languages, HandHeart, ShieldCheck, Sparkles } from "lucide-react";
 import { site } from "@/data/site";
+import { asset } from "@/lib/utils";
 import { PageHeader } from "@/components/PageHeader";
 import { SectionHeading } from "@/components/SectionHeading";
 import { StatsRow } from "@/components/StatsRow";
@@ -39,7 +40,7 @@ export default function AboutPage() {
           <ScrollReveal from="right" className="lg:col-span-2">
             <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl bg-muted shadow-soft">
               <Image
-                src={site.agent.portrait}
+                src={asset(site.agent.portrait)}
                 alt={site.agent.portraitAlt}
                 fill
                 sizes="(min-width: 1024px) 35vw, 90vw"

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Phone } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { site } from "@/data/site";
-import { cn } from "@/lib/utils";
+import { cn, asset } from "@/lib/utils";
 import { Button } from "./Button";
 
 // Routes that render a full-bleed dark hero behind the header, so the header
@@ -56,7 +56,7 @@ export function Header() {
           aria-label={`${site.agent.name}, ${site.brokerage.name} — home`}
         >
           <Image
-            src={site.brokerage.logo}
+            src={asset(site.brokerage.logo)}
             alt=""
             width={40}
             height={40}
