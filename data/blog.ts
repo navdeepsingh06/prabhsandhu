@@ -24,8 +24,8 @@ export const posts: PostMeta[] = [
     readingMinutes: 7,
     category: "Buying",
     cover: {
-      src: "https://images.unsplash.com/photo-1560520655-947a0f9a1c92?auto=format&fit=crop&w=1200&q=70",
-      alt: "Keys being handed over in front of a new home",
+      src: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=70",
+      alt: "A welcoming modern home exterior",
     },
   },
   {

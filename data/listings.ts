@@ -308,8 +308,8 @@ export const listings: Listing[] = [
     ],
     images: [
       img("photo-1598228723793-52759bba239c", "Bungalow with landscaped front yard"),
-      img("photo-1600566753051-6057f2a0f0c0", "Bungalow living room"),
-      img("photo-1600210491892-03d54c0aaf18", "Bungalow kitchen"),
+      img("photo-1600121848594-d8644e57abab", "Bungalow living room"),
+      img("photo-1600566752355-35792bedcfea", "Bungalow kitchen"),
     ],
     listedOn: "2026-09-05",
     coords: { lat: 49.86, lng: -97.26 },
