@@ -69,7 +69,10 @@
   h2,
   h3,
   h4 {
-    @apply font-serif font-semibold tracking-tight text-foreground;
+    /* Inherit color so headings adapt to dark sections (teal bands, CTAs,
+       image overlays). Body sets the default `text-foreground` on light pages. */
+    @apply font-serif font-semibold tracking-tight;
+    color: inherit;
     text-wrap: balance;
   }
 
